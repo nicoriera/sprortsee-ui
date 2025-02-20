@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import UserService from "../service/user";
+import { Loader } from "../components/Loader";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -20,7 +21,7 @@ const Profile = () => {
     fetchUser();
   }, []);
 
-  if (loading) return <div>Chargement...</div>;
+  if (loading) return <Loader />;
   if (!user) return <div>Erreur de chargement</div>;
 
   return (
