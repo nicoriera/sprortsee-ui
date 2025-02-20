@@ -1,4 +1,5 @@
 import axios from "axios";
+import { DataFormatter } from "../utils/dataFormatter";
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -27,7 +28,8 @@ const UserService = {
    * @returns {Promise} Données de l'utilisateur
    */
   fetchUserInfo: async (userId) => {
-    return fetchData(`/user/${userId}`);
+    const data = await fetchData(`/user/${userId}`);
+    return DataFormatter.formatUserData(data.data);
   },
 
   /**
@@ -36,7 +38,8 @@ const UserService = {
    * @returns {Promise} Données d'activité
    */
   fetchUserActivity: async (userId) => {
-    return fetchData(`/user/${userId}/activity`);
+    const data = await fetchData(`/user/${userId}/activity`);
+    return DataFormatter.formatActivityData(data.data);
   },
 
   /**
@@ -45,7 +48,8 @@ const UserService = {
    * @returns {Promise} Données des sessions moyennes
    */
   fetchUserAverageSessions: async (userId) => {
-    return fetchData(`/user/${userId}/average-sessions`);
+    const data = await fetchData(`/user/${userId}/average-sessions`);
+    return DataFormatter.formatAverageSessionsData(data.data);
   },
 
   /**
@@ -54,7 +58,8 @@ const UserService = {
    * @returns {Promise} Données de performance
    */
   fetchUserPerformance: async (userId) => {
-    return fetchData(`/user/${userId}/performance`);
+    const data = await fetchData(`/user/${userId}/performance`);
+    return DataFormatter.formatPerformanceData(data.data);
   },
 };
 
