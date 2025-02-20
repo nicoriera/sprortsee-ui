@@ -1,14 +1,10 @@
 import PropTypes from "prop-types";
-
+import { Header } from "../components/Header";
 const LayoutDefault = ({ children }) => {
   return (
-    <div className="max-w-dashboard mx-auto p-8 min-h-dashboard">
-      <header className="flex items-center justify-between mb-8">
-        <div className="flex items-center">
-          <h1 className="text-2xl font-bold">SportSee</h1>
-        </div>
-      </header>
-      {children} {/* Ajout de children ici */}
+    <div className="max-w-dashboard mx-auto min-h-dashboard">
+      <Header />
+      <div className="flex flex-col p-8 gap-8">{children}</div>
     </div>
   );
 };
