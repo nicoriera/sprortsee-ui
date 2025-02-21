@@ -2,9 +2,14 @@ import { useState, useEffect } from "react";
 import UserService from "../service/user";
 import { Loader } from "../components/Loader";
 import { useParams } from "react-router-dom";
+import { CardInfo } from "../components/CardInfo";
+
 const Profile = () => {
   const [user, setUser] = useState(null);
+  const [keyData, setKeyData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  console.log("keyData", keyData);
 
   const { id } = useParams();
 
@@ -13,6 +18,7 @@ const Profile = () => {
       try {
         const userData = await UserService.fetchUserInfo(id);
         setUser(userData);
+        setKeyData(userData.keyData);
       } catch (error) {
         console.error("Erreur lors du chargement des données:", error);
       } finally {
@@ -61,42 +67,10 @@ const Profile = () => {
           </div>
         </section>
         <section className="grid grid-rows-4 gap-8 basis-1/3">
-          <div className="bg-neutral-50 flex rounded-md gap-4 p-8">
-            <div>
-              <h2>Activité quotidienne</h2>
-            </div>
-            <div className="flex flex-col">
-              <p>Poids (kg)</p>
-              <p>40</p>
-            </div>
-          </div>
-          <div className="bg-neutral-50 flex rounded-md gap-4 p-8">
-            <div>
-              <h2>Activité quotidienne</h2>
-            </div>
-            <div className="flex flex-col">
-              <p>Poids (kg)</p>
-              <p>40</p>
-            </div>
-          </div>
-          <div className="bg-neutral-50 flex rounded-md gap-4 p-8">
-            <div>
-              <h2>Activité quotidienne</h2>
-            </div>
-            <div className="flex flex-col">
-              <p>Poids (kg)</p>
-              <p>40</p>
-            </div>
-          </div>
-          <div className="bg-neutral-50 flex rounded-md gap-4 p-8">
-            <div>
-              <h2>Activité quotidienne</h2>
-            </div>
-            <div className="flex flex-col">
-              <p>Poids (kg)</p>
-              <p>40</p>
-            </div>
-          </div>
+          <CardInfo typeKeyData="Calories" value={keyData.calorieCount} />
+          <CardInfo typeKeyData="Protéines" value={keyData.proteinCount} />
+          <CardInfo typeKeyData="Glucides" value={keyData.carbohydrateCount} />
+          <CardInfo typeKeyData="Lipides" value={keyData.lipidCount} />
         </section>
       </div>
     </>
