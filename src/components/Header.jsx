@@ -25,7 +25,7 @@ const Header = () => {
               Accueil
             </NavLink>
             <NavLink
-              to="/profile"
+              to="/profile/12"
               className={({ isActive }) =>
                 `cursor-pointer w-[100px] text-center ${
                   isActive ? "font-bold" : ""
