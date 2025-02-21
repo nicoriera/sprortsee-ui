@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
 import UserService from "../service/user";
 import { Loader } from "../components/Loader";
-
+import { useParams } from "react-router-dom";
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const { id } = useParams();
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userData = await UserService.fetchUserInfo(12);
+        const userData = await UserService.fetchUserInfo(id);
         setUser(userData);
       } catch (error) {
         console.error("Erreur lors du chargement des données:", error);
@@ -19,20 +21,83 @@ const Profile = () => {
     };
 
     fetchUser();
-  }, []);
+  }, [id]);
 
   if (loading) return <Loader />;
   if (!user) return <div>Erreur de chargement</div>;
 
   return (
     <>
-      <h1>Bonjour {user.userInfos.firstName}</h1>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Conteneurs des graphiques */}
-        <div className="bg-white rounded-lg p-4 shadow-md">
-          {/* Graphique 1 */}
-        </div>
-        {/* Autres graphiques */}
+      <div>
+        <h1 className="text-black text-5xl font-medium leading-normal">
+          Bonjour{" "}
+          <span className="text-red-500"> {user.userInfos.firstName}</span>
+        </h1>
+        <p className="text-black text-lg mt-4 font-normal leading-normal">
+          Félicitation ! Vous avez explosé vos objectifs hier 👏
+        </p>
+      </div>
+      <div
+        className="grid grid-cols-5 gap-8 mt-16"
+        style={{ gridTemplateColumns: "4fr  1fr" }}
+      >
+        <section className="grid grid-rows-2 gap-8 basis-2/3">
+          <div className="bg-neutral-50 flex rounded-md gap-4 p-8">
+            <h2>Activité quotidienne</h2>
+          </div>
+          <div className="flex h-84 gap-8">
+            <div className="bg-neutral-50 flex rounded-md gap-4 basis-1/3  p-8">
+              <p>Poids (kg)</p>
+              <p>40</p>
+            </div>
+            <div className="bg-neutral-50 flex rounded-md gap-4 basis-1/3  p-8">
+              <p>Poids (kg)</p>
+              <p>40</p>
+            </div>
+            <div className="bg-neutral-50 flex rounded-md gap-4 basis-1/3  p-8">
+              <p>Poids (kg)</p>
+              <p>40</p>
+            </div>
+          </div>
+        </section>
+        <section className="grid grid-rows-4 gap-8 basis-1/3">
+          <div className="bg-neutral-50 flex rounded-md gap-4 p-8">
+            <div>
+              <h2>Activité quotidienne</h2>
+            </div>
+            <div className="flex flex-col">
+              <p>Poids (kg)</p>
+              <p>40</p>
+            </div>
+          </div>
+          <div className="bg-neutral-50 flex rounded-md gap-4 p-8">
+            <div>
+              <h2>Activité quotidienne</h2>
+            </div>
+            <div className="flex flex-col">
+              <p>Poids (kg)</p>
+              <p>40</p>
+            </div>
+          </div>
+          <div className="bg-neutral-50 flex rounded-md gap-4 p-8">
+            <div>
+              <h2>Activité quotidienne</h2>
+            </div>
+            <div className="flex flex-col">
+              <p>Poids (kg)</p>
+              <p>40</p>
+            </div>
+          </div>
+          <div className="bg-neutral-50 flex rounded-md gap-4 p-8">
+            <div>
+              <h2>Activité quotidienne</h2>
+            </div>
+            <div className="flex flex-col">
+              <p>Poids (kg)</p>
+              <p>40</p>
+            </div>
+          </div>
+        </section>
       </div>
     </>
   );

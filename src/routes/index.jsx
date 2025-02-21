@@ -21,7 +21,7 @@ const Router = () => {
           }
         />
         <Route
-          path="/profile"
+          path="/profile/:id"
           element={
             <LayoutDefault>
               <Profile />
