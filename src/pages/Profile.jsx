@@ -3,13 +3,12 @@ import UserService from "../service/user";
 import { Loader } from "../components/Loader";
 import { useParams } from "react-router-dom";
 import { CardInfo } from "../components/CardInfo";
+import { BarChart } from "../components/BarChart";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [keyData, setKeyData] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  console.log("keyData", keyData);
 
   const { id } = useParams();
 
@@ -48,8 +47,8 @@ const Profile = () => {
         style={{ gridTemplateColumns: "4fr  1fr" }}
       >
         <section className="grid grid-rows-2 gap-8 basis-2/3">
-          <div className="bg-neutral-50 flex rounded-md gap-4 p-8">
-            <h2>Activité quotidienne</h2>
+          <div className="bg-neutral-50 flex items-center justify-center rounded-md gap-4 ">
+            <BarChart userId={id} />
           </div>
           <div className="flex h-84 gap-8">
             <div className="bg-neutral-50 flex rounded-md gap-4 basis-1/3  p-8">
