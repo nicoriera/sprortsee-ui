@@ -27,7 +27,7 @@ const LineChart = ({ userId }) => {
 
   useEffect(() => {
     if (!isLoading && data.length > 0) {
-      const chart = createLineChart("average-sessions-chart");
+      const chart = createLineChart("line-chart");
       chart.initialize(data);
       return chart.cleanup;
     }
@@ -38,10 +38,7 @@ const LineChart = ({ userId }) => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div
-          id="average-sessions-chart"
-          className="average-sessions-chart"
-        ></div>
+        <div id="line-chart" className="line-chart"></div>
       )}
     </>
   );
