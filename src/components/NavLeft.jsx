@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom'
 
 const NavLeft = () => {
   return (
     <div>
-      <div className="fixed top-0 left-0 flex flex-col w-24 h-full bg-black items-center justify-center gap-52 ">
+      <div className="fixed top-0 left-0 flex flex-col w-28 h-full bg-black items-center justify-center gap-52 ">
         <div className="flex flex-col gap-4 ">
           <Link to="/">
             <img
@@ -39,7 +39,7 @@ const NavLeft = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export { NavLeft };
+export { NavLeft }

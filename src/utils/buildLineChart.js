@@ -1,171 +1,187 @@
-import * as d3 from "d3";
+import * as d3 from 'd3'
+import { createSvg, cleanupChart, injectStyle, createTooltip } from './chartCore'
 
 const BASE_CHART_CONFIG = {
-  width: 300,
-  height: 300,
+  width: 258,
+  height: 263,
   margin: { top: 70, right: 0, bottom: 50, left: 0 },
   colors: {
-    text: "#20253A",
-    tickText: "#9B9EAC",
-    background: "#E60000",
-    line: "#E60000",
-    dot: "#E60000",
-  },
-};
+    text: '#20253A',
+    tickText: '#9B9EAC',
+    background: '#E60000',
+    line: '#E60000',
+    dot: '#E60000'
+  }
+}
 
 const createLineChart = (containerId, config = {}) => {
-  const chartConfig = { ...BASE_CHART_CONFIG, ...config };
-  const width =
-    chartConfig.width - chartConfig.margin.left - chartConfig.margin.right;
-  const height =
-    chartConfig.height - chartConfig.margin.top - chartConfig.margin.bottom;
-  let svg;
+  const chartConfig = { ...BASE_CHART_CONFIG, ...config }
+  const width = chartConfig.width - chartConfig.margin.left - chartConfig.margin.right
+  const height = chartConfig.height - chartConfig.margin.top - chartConfig.margin.bottom
 
-  const cleanup = () => {
-    d3.select(`#${containerId} svg`).remove();
-    d3.select(".tooltip").remove();
-  };
+  const cleanup = () => cleanupChart(containerId)
 
   const initialize = (data) => {
-    cleanup();
+    cleanup()
 
     // Définition des libellés pour les jours
-    const dayLabels = ["L", "M", "M", "J", "V", "S", "D"];
+    const dayLabels = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
 
-    svg = d3
-      .select(`#${containerId}`)
-      .append("svg")
-      .attr("width", chartConfig.width)
-      .attr("height", chartConfig.height);
-
-    // Fond rouge avec border-radius
+    // Création du SVG et du groupe principal avec marges via chartCore
+    const svgGroup = createSvg(containerId, {
+      width: chartConfig.width,
+      height: chartConfig.height,
+      margin: chartConfig.margin
+    })
+    // Récupérer l'élément svg parent pour y insérer le background
+    const svg = d3.select(svgGroup.node().parentNode)
     svg
-      .append("rect")
-      .attr("width", chartConfig.width)
-      .attr("height", chartConfig.height)
-      .attr("fill", "#FF0000")
-      .attr("rx", 5)
-      .attr("ry", 5);
+      .insert('rect', ':first-child')
+      .attr('width', chartConfig.width)
+      .attr('height', chartConfig.height)
+      .attr('fill', chartConfig.colors.background)
+      .attr('rx', 5)
+      .attr('ry', 5)
 
-    // Groupe principal avec marges
-    const g = svg
-      .append("g")
-      .attr(
-        "transform",
-        `translate(${chartConfig.margin.left},${chartConfig.margin.top})`
-      );
+    const g = svgGroup // Le groupe retourné contient déjà la translation (marges)
 
-    // Utilisation des index pour les échelles X (pour garantir l'affichage de tous les jours)
+    // Échelles pour l'axe X et la ligne
     const xScaleAxis = d3
       .scalePoint()
       .domain(dayLabels.map((_, i) => i))
       .range([0, width])
-      .padding(0.5);
+      .padding(0.5)
 
     const xScaleLine = d3
       .scalePoint()
       .domain(dayLabels.map((_, i) => i))
       .range([0, width])
-      .padding(0);
+      .padding(0)
 
+    // Échelle pour l'axe Y
     const yScale = d3
       .scaleLinear()
       .domain([0, d3.max(data, (d) => d.sessionLength) * 1.1])
-      .range([height, 0]);
+      .range([height, 0])
 
-    // Génération de la ligne
+    // Génération de la ligne avec une courbe CatmullRom
     const line = d3
       .line()
       .x((d, i) => xScaleLine(i))
       .y((d) => yScale(d.sessionLength))
-      .curve(d3.curveCatmullRom.alpha(0.5));
+      .curve(d3.curveCatmullRom.alpha(0.5))
 
-    g.append("path")
+    // Création du chemin avec animation
+    const path = g
+      .append('path')
       .datum(data)
-      .attr("fill", "none")
-      .attr("stroke", "white")
-      .attr("stroke-width", 2)
-      .attr("d", line);
+      .attr('fill', 'none')
+      .attr('stroke', 'white')
+      .attr('stroke-width', 2)
+      .attr('d', line)
 
-    // Points (initialement cachés)
-    const dots = g.append("g").style("opacity", 0);
+    // Animation du tracé de la ligne
+    const pathLength = path.node().getTotalLength()
+    path
+      .attr('stroke-dasharray', pathLength)
+      .attr('stroke-dashoffset', pathLength)
+      .transition()
+      .duration(2000)
+      .ease(d3.easeLinear)
+      .attr('stroke-dashoffset', 0)
 
+    // Animation des points
+    const dots = g.append('g').style('opacity', 0)
     dots
-      .selectAll(".dot")
+      .selectAll('.dot')
       .data(data)
       .enter()
-      .append("circle")
-      .attr("class", "dot")
-      .attr("cx", (d, i) => xScaleLine(i))
-      .attr("cy", (d) => yScale(d.sessionLength))
-      .attr("r", 4)
-      .attr("fill", "white");
+      .append('circle')
+      .attr('class', 'dot')
+      .attr('cx', (d, i) => xScaleLine(i))
+      .attr('cy', (d) => yScale(d.sessionLength))
+      .attr('r', 0)
+      .attr('fill', 'white')
+      .transition()
+      .delay(2000)
+      .duration(500)
+      .attr('r', 4)
 
-    // Création du tooltip
-    const tooltip = d3
-      .select(`#${containerId}`)
-      .append("div")
-      .attr("class", "tooltip")
-      .style("opacity", 0)
-      .style("position", "absolute")
-      .style("background-color", "white")
-      .style("padding", "10px")
-      .style("border-radius", "2px")
-      .style("pointer-events", "none")
-      .style("font-size", "12px");
+    // Création du tooltip via chartCore
+    const tooltip = createTooltip(containerId, {
+      className: 'tooltip',
+      backgroundColor: 'white',
+      padding: '10px',
+      borderRadius: '2px'
+    })
+    tooltip.style('font-size', '12px')
 
-    // Zone de hover pour le tooltip
-    g.append("rect")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("fill", "transparent")
-      .on("mousemove", (event) => {
-        dots.style("opacity", 1);
-        const [mouseX] = d3.pointer(event);
-        const index = Math.floor(mouseX / (width / dayLabels.length));
-        const dataPoint = data[index];
+    // Zone de hover pour afficher le tooltip
+    g.append('rect')
+      .attr('width', width)
+      .attr('height', height)
+      .attr('fill', 'transparent')
+      .on('mousemove', (event) => {
+        dots.style('opacity', 1)
+        const [mouseX] = d3.pointer(event)
+        const index = Math.floor(mouseX / (width / dayLabels.length))
+        const dataPoint = data[index]
         if (dataPoint) {
           tooltip
-            .style("opacity", 1)
+            .style('opacity', 1)
             .html(`${dataPoint.sessionLength} min`)
-            .style("left", `${event.pageX + 10}px`)
-            .style("top", `${event.pageY - 28}px`);
+            .style('left', `${event.pageX + 10}px`)
+            .style('top', `${event.pageY - 28}px`)
         }
       })
-      .on("mouseout", () => {
-        dots.style("opacity", 0);
-        tooltip.style("opacity", 0);
-      });
+      .on('mouseout', () => {
+        dots.style('opacity', 0)
+        tooltip.style('opacity', 0)
+      })
 
-    // Axe X avec des libellés mappés
-    g.append("g")
-      .attr("transform", `translate(0,${height})`)
+    // Axe X avec libellés
+    g.append('g')
+      .attr('transform', `translate(0,${height})`)
       .call(d3.axisBottom(xScaleAxis).tickFormat((d) => dayLabels[d]))
       .call((gEl) => {
-        gEl.selectAll(".domain").remove();
-        gEl.selectAll(".tick line").remove();
+        gEl.selectAll('.domain').remove()
+        gEl.selectAll('.tick line').remove()
         gEl
-          .selectAll(".tick text")
-          .style("fill", "white")
-          .style("font-size", "12px")
-          .style("font-weight", "500");
-      });
+          .selectAll('.tick text')
+          .style('fill', 'white')
+          .style('font-size', '12px')
+          .style('font-weight', '500')
+      })
 
     // Titre du graphique
-    g.append("text")
-      .attr("x", width / 2)
-      .attr("y", -30)
-      .attr("text-anchor", "middle")
-      .style("fill", "white")
-      .style("font-size", "15px")
-      .style("font-weight", "500")
-      .text("Durée moyenne des sessions");
-  };
+    g.append('text')
+      .attr('x', width / 2)
+      .attr('y', -30)
+      .attr('text-anchor', 'middle')
+      .style('fill', 'white')
+      .style('font-size', '15px')
+      .style('font-weight', '500')
+      .text('Durée moyenne des sessions')
+
+    // Injection du style via chartCore
+    injectStyle(`
+      .line-chart {
+        background: ${chartConfig.colors.background};
+        border-radius: 5px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 258px;
+        height: 263px;
+      }
+    `)
+  }
 
   return {
     initialize,
-    cleanup,
-  };
-};
+    cleanup
+  }
+}
 
-export { createLineChart };
+export { createLineChart }

@@ -1,13 +1,13 @@
-import PropTypes from "prop-types";
-import { dataIconCardInfo } from "../utils/dataCardInfo";
+import PropTypes from 'prop-types';
+import { dataIconCardInfo } from '../utils/dataCardInfo';
 
 const CardInfo = ({ typeKeyData, value }) => {
   const icon = dataIconCardInfo.getIcon(typeKeyData);
   const label = dataIconCardInfo.getLabel(typeKeyData);
   const unit = dataIconCardInfo.getUnit(typeKeyData);
   return (
-    <div className="bg-neutral-50 flex rounded-md gap-4 p-8 items-center">
-      <div>
+    <div className="bg-neutral-50 flex justify-between rounded-md gap-4 p-8 items-center w-full">
+      <div className="w-16 h-16">
         <img src={`/${icon}`} alt={typeKeyData} />
       </div>
       <div className="flex flex-col">
