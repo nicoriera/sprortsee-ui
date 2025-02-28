@@ -1,31 +1,33 @@
 import { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import UserService from "../service/user";
-import { createActivityChart } from "../utils/buildBarChart";
 import { Loader } from "./Loader";
+import { createLineChart } from "../utils/buildLineChart";
 
-const BarChart = ({ userId }) => {
-  const [isLoading, setIsLoading] = useState(true);
+const LineChart = ({ userId }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
 
-  const fetchDataActivity = useCallback(async () => {
+  const fetchAverageSessions = useCallback(async () => {
     try {
-      const data = await UserService.fetchUserActivity(userId);
-      setData(data);
+      setIsLoading(true);
+      const response = await UserService.fetchUserAverageSessions(userId);
+      setData(response || []); // Les données sont déjà dans le bon format
     } catch (error) {
       console.error("Erreur lors du chargement des données:", error);
+      setData([]);
     } finally {
       setIsLoading(false);
     }
   }, [userId]);
 
   useEffect(() => {
-    fetchDataActivity();
-  }, [fetchDataActivity]);
+    fetchAverageSessions();
+  }, [fetchAverageSessions]);
 
   useEffect(() => {
     if (!isLoading && data.length > 0) {
-      const chart = createActivityChart("activity-chart");
+      const chart = createLineChart("average-sessions-chart");
       chart.initialize(data);
       return chart.cleanup;
     }
@@ -36,14 +38,17 @@ const BarChart = ({ userId }) => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div id="activity-chart" className="activity-chart"></div>
+        <div
+          id="average-sessions-chart"
+          className="average-sessions-chart"
+        ></div>
       )}
     </>
   );
 };
 
-BarChart.propTypes = {
+LineChart.propTypes = {
   userId: PropTypes.number.isRequired,
 };
 
-export { BarChart };
+export { LineChart };
