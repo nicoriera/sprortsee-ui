@@ -4,7 +4,7 @@ import { Loader } from "../components/Loader";
 import { useParams } from "react-router-dom";
 import { CardInfo } from "../components/CardInfo";
 import { BarChart } from "../components/BarChart";
-
+import { LineChart } from "../components/LineChart";
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [keyData, setKeyData] = useState(null);
@@ -51,9 +51,8 @@ const Profile = () => {
             <BarChart userId={id} />
           </div>
           <div className="flex h-84 gap-8">
-            <div className="bg-neutral-50 flex rounded-md gap-4 basis-1/3  p-8">
-              <p>Poids (kg)</p>
-              <p>40</p>
+            <div className=" flex gap-4 basis-1/3  p-8">
+              <LineChart userId={id} />
             </div>
             <div className="bg-neutral-50 flex rounded-md gap-4 basis-1/3  p-8">
               <p>Poids (kg)</p>
