@@ -8,8 +8,7 @@ Application de tableau de bord d'analytics sportives développée avec React, Vi
 - Vite
 - Tailwind CSS
 - React Router DOM
-- Recharts (pour les graphiques)
-- D3.js (pour les visualisations de données avancées)
+- D3.js (pour les grapiques)
 - PropTypes (pour la validation des props)
 
 ## Prérequis
