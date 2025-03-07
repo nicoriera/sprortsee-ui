@@ -1,5 +1,5 @@
 import * as d3 from 'd3'
-import { createSvg, cleanupChart, injectStyle, createTooltip } from './chartCore'
+import { createSvg, cleanupChart, injectStyle, initializeTooltip } from './chartCore'
 
 const BASE_CHART_CONFIG = {
   width: 258,
@@ -108,36 +108,74 @@ const createLineChart = (containerId, config = {}) => {
       .attr('r', 4)
 
     // Création du tooltip via chartCore
-    const tooltip = createTooltip(containerId, {
+    initializeTooltip(containerId, {
       className: 'tooltip',
-      backgroundColor: 'white',
-      padding: '10px',
+      backgroundColor: '#FFFFFF',
+      padding: '7px 10px',
       borderRadius: '2px'
-    })
-    tooltip.style('font-size', '12px')
+    }).then((tooltip) => {
+      tooltip
+        .style('font-size', '10px')
+        .style('font-weight', '500')
+        .style('color', '#000000')
+        .style('text-align', 'center')
+        .style('min-width', '39px')
+        .style('pointer-events', 'none')
 
-    // Zone de hover pour afficher le tooltip
-    g.append('rect')
-      .attr('width', width)
-      .attr('height', height)
-      .attr('fill', 'transparent')
-      .on('mousemove', (event) => {
-        dots.style('opacity', 1)
-        const [mouseX] = d3.pointer(event)
-        const index = Math.floor(mouseX / (width / dayLabels.length))
-        const dataPoint = data[index]
-        if (dataPoint) {
-          tooltip
-            .style('opacity', 1)
-            .html(`${dataPoint.sessionLength} min`)
-            .style('left', `${event.pageX + 10}px`)
-            .style('top', `${event.pageY - 28}px`)
-        }
-      })
-      .on('mouseout', () => {
-        dots.style('opacity', 0)
-        tooltip.style('opacity', 0)
-      })
+      // Création de la zone de hover permanente
+      const hoverBackground = g
+        .append('rect')
+        .attr('class', 'hover-background')
+        .attr('width', 0)
+        .attr('height', chartConfig.height)
+        .attr('fill', 'rgba(0, 0, 0, 0.2)')
+        .attr('y', -chartConfig.margin.top)
+        .attr('transform', `translate(0, 0)`)
+        .style('opacity', 0)
+
+      // Zone de hover pour afficher le tooltip
+      g.append('rect')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('fill', 'transparent')
+        .style('cursor', 'pointer')
+        .on('mousemove', (event) => {
+          const [mouseX] = d3.pointer(event, g.node())
+          const xPos = Math.max(0, Math.min(mouseX, width))
+          const index = Math.round((xPos / width) * (data.length - 1))
+          const dataPoint = data[index]
+
+          if (dataPoint) {
+            // Afficher les points
+            dots.style('opacity', 1)
+
+            // Mettre à jour le tooltip
+            const containerRect = d3.select(`#${containerId}`).node().getBoundingClientRect()
+            const tooltipX = event.clientX - containerRect.left + 10
+            const tooltipY = event.clientY - containerRect.top - 40
+
+            tooltip
+              .style('opacity', 1)
+              .html(`${dataPoint.sessionLength} min`)
+              .style('left', `${tooltipX}px`)
+              .style('top', `${tooltipY}px`)
+
+            // Mettre à jour la zone de hover avec transition
+            hoverBackground
+              .style('opacity', 1)
+              .attr('x', xPos)
+              .attr('width', width - xPos)
+              .transition()
+              .duration(200)
+              .style('opacity', 0.5)
+          }
+        })
+        .on('mouseout', () => {
+          dots.style('opacity', 0)
+          tooltip.style('opacity', 0)
+          hoverBackground.transition().duration(200).style('opacity', 0)
+        })
+    })
 
     // Axe X avec libellés
     g.append('g')
@@ -155,13 +193,22 @@ const createLineChart = (containerId, config = {}) => {
 
     // Titre du graphique
     g.append('text')
-      .attr('x', width / 2)
-      .attr('y', -30)
-      .attr('text-anchor', 'middle')
-      .style('fill', 'white')
+      .attr('x', 30)
+      .attr('y', -18)
+      .attr('text-anchor', 'start')
+      .style('fill', 'rgba(255, 255, 255, 0.5)')
       .style('font-size', '15px')
       .style('font-weight', '500')
-      .text('Durée moyenne des sessions')
+      .text('Durée moyenne des')
+
+    g.append('text')
+      .attr('x', 30)
+      .attr('y', -0)
+      .attr('text-anchor', 'start')
+      .style('fill', 'rgba(255, 255, 255, 0.5)')
+      .style('font-size', '15px')
+      .style('font-weight', '500')
+      .text('sessions')
 
     // Injection du style via chartCore
     injectStyle(`

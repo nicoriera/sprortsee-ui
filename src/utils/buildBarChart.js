@@ -1,5 +1,5 @@
 import * as d3 from 'd3'
-import { createSvg, cleanupChart, injectStyle, createTooltip } from './chartCore'
+import { createSvg, cleanupChart, injectStyle, initializeTooltip } from './chartCore'
 
 export const BASE_CHART_CONFIG = {
   margin: { top: 70, right: 30, bottom: 50, left: 30 },
@@ -25,14 +25,16 @@ export const createActivityChart = (containerId, config = {}) => {
 
   const cleanup = () => cleanupChart(containerId)
 
-  const handleTooltip = (event, data) => {
+  const handleTooltip = (event, d) => {
+    if (!tooltip) return // Protection contre les appels avant l'initialisation
+
     const container = d3.select(`#${containerId}`).node()
     const [x, y] = d3.pointer(event, container)
     tooltip
       .style('opacity', 1)
-      .html(`${data.kilogram}kg<br>${data.calories}kCal`)
-      .style('left', `${x + 10}px`)
-      .style('top', `${y - 28}px`)
+      .html(`<span>${d.kilogram}kg</span><br><span>${d.calories}kCal</span>`)
+      .style('left', `${x + 20}px`)
+      .style('top', `${y - 50}px`)
   }
 
   const createScales = (data) => ({
@@ -122,17 +124,15 @@ export const createActivityChart = (containerId, config = {}) => {
       .attr('y', (d) => scales.yCalories(d.calories))
       .attr('height', (d) => height - scales.yCalories(d.calories))
 
-    // Zone de hover
+    // Zone de hover avec classe pour faciliter la sélection
     dayGroups
       .append('rect')
+      .attr('class', 'hover-zone')
       .attr('x', (d) => scales.x(d.day))
       .attr('y', 0)
       .attr('width', scales.x.bandwidth())
       .attr('height', height)
       .attr('fill', 'transparent')
-      .on('mouseover', handleTooltip)
-      .on('mouseout', () => tooltip.style('opacity', 0))
-      .on('mousemove', handleTooltip)
   }
 
   const addLegend = () => {
@@ -178,18 +178,13 @@ export const createActivityChart = (containerId, config = {}) => {
 
   const initialize = (data) => {
     cleanup()
+
+    // Création du SVG
     svg = createSvg(containerId, {
       width: chartConfig.width,
       height: chartConfig.height,
       margin: chartConfig.margin
     })
-    tooltip = createTooltip(containerId, {
-      className: 'tooltip',
-      backgroundColor: chartConfig.colors.calories,
-      padding: '10px',
-      borderRadius: '5px'
-    })
-    tooltip.style('color', 'white')
 
     scales = createScales(data)
 
@@ -206,6 +201,38 @@ export const createActivityChart = (containerId, config = {}) => {
     addBars(data)
     addLegend()
 
+    // Création du tooltip avec un retard pour s'assurer que le DOM est prêt
+    setTimeout(() => {
+      initializeTooltip(containerId, {
+        className: 'tooltip',
+        backgroundColor: '#E60000',
+        padding: '10px 7px',
+        borderRadius: '5px'
+      }).then((tooltipInstance) => {
+        tooltip = tooltipInstance
+        tooltip
+          .style('color', '#FFFFFF')
+          .style('font-size', '10px')
+          .style('font-weight', '500')
+          .style('text-align', 'center')
+          .style('min-width', '39px')
+          .style('pointer-events', 'none')
+
+        // Attacher les événements aux zones de hover
+        d3.selectAll(`#${containerId} .hover-zone`).each(function () {
+          const element = d3.select(this)
+          const dayGroup = d3.select(this.parentNode)
+          const data = dayGroup.datum()
+
+          element
+            .style('cursor', 'pointer')
+            .on('mouseover', (event) => handleTooltip(event, data))
+            .on('mouseout', () => tooltip.style('opacity', 0))
+            .on('mousemove', (event) => handleTooltip(event, data))
+        })
+      })
+    }, 100)
+
     injectStyle(`
       .activity-chart {
         background: ${chartConfig.colors.background};
@@ -215,7 +242,6 @@ export const createActivityChart = (containerId, config = {}) => {
         padding-right: 20px;
         justify-content: center;
         align-items: center;
-      
       }
     `)
   }
