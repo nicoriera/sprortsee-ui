@@ -1,6 +1,14 @@
 import PropTypes from 'prop-types'
 import { NavLeft } from '../components/NavLeft'
 import { Header } from '../components/Header'
+
+/**
+ * Composant LayoutDefault qui affiche le layout de la page
+ * @component
+ * @param {Object} props - Propriétés du composant
+ * @param {React.ReactNode} props.children - Contenu enfant à afficher
+ * @returns {React.ReactElement} Composant LayoutDefault
+ */
 const LayoutDefault = ({ children }) => {
   return (
     <div className="container mx-auto ">

@@ -1,5 +1,15 @@
 import { NavLink } from 'react-router-dom'
 
+/**
+ * Composant Header qui affiche le header de la page
+ * @component
+ * @returns {React.ReactElement} Composant Header
+ * @param {Object} props - Propriétés du composant
+ * @param {string} props.title - Titre de la page
+ * @param {string} props.icon - Icône de la page
+ * @param {string} props.link - Lien de la page
+ */
+
 const Header = () => {
   return (
     <div className="fixed top-0 left-0 right-0 z-10 ">

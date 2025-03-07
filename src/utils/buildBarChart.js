@@ -1,6 +1,15 @@
 import * as d3 from 'd3'
 import { createSvg, cleanupChart, injectStyle, initializeTooltip } from './chartCore'
 
+/**
+ * Configuration de base pour le graphique à barres
+ * @typedef {Object} BarChartConfig
+ * @property {number} width - Largeur du graphique
+ * @property {number} height - Hauteur du graphique
+ * @property {Object} margin - Marges du graphique
+ * @property {Object} colors - Configuration des couleurs
+ */
+
 export const BASE_CHART_CONFIG = {
   margin: { top: 70, right: 30, bottom: 50, left: 30 },
   width: 835,

@@ -1,7 +1,14 @@
-import { createRoot } from "react-dom/client";
-import { Router } from "./routes/index";
-import "./index.css";
+import { createRoot } from 'react-dom/client'
+import { Router } from './routes/index'
+import './index.css'
 
-const root = createRoot(document.getElementById("root"));
+/**
+ * Composant principal de l'application
+ * @component
+ * @returns {React.ReactElement} Composant principal
+ *
+ */
 
-root.render(<Router />);
+const root = createRoot(document.getElementById('root'))
+
+root.render(<Router />)

@@ -1,12 +1,19 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 // Pages
-import { Profile } from "../pages/Profile";
-import { Home } from "../pages/Home";
-import { Community } from "../pages/Community";
-import { Settings } from "../pages/Settings";
+import { Profile } from '../pages/Profile'
+import { Home } from '../pages/Home'
+import { Community } from '../pages/Community'
+import { Settings } from '../pages/Settings'
 
 // Layout
-import { LayoutDefault } from "../layout/LaoyoutDefault";
+import { LayoutDefault } from '../layout/LaoyoutDefault'
+
+/**
+ * Composant Router qui affiche les routes de l'application
+ * @component
+ * @returns {React.ReactElement} Composant Router
+ *
+ */
 
 const Router = () => {
   return (
@@ -46,7 +53,7 @@ const Router = () => {
         />
       </Routes>
     </BrowserRouter>
-  );
-};
+  )
+}
 
-export { Router };
+export { Router }

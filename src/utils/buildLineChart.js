@@ -14,13 +14,36 @@ const BASE_CHART_CONFIG = {
   }
 }
 
+/**
+ * Configuration de base pour le graphique linéaire
+ * @typedef {Object} LineChartConfig
+ * @property {number} width - Largeur du graphique
+ * @property {number} height - Hauteur du graphique
+ * @property {Object} margin - Marges du graphique
+ * @property {Object} colors - Configuration des couleurs
+ */
+
+/**
+ * Crée un graphique linéaire pour afficher la durée moyenne des sessions
+ * @param {string} containerId - ID du conteneur DOM où le graphique sera rendu
+ * @param {LineChartConfig} config - Configuration optionnelle du graphique
+ * @returns {Object} Objet contenant les méthodes initialize et cleanup
+ */
 const createLineChart = (containerId, config = {}) => {
   const chartConfig = { ...BASE_CHART_CONFIG, ...config }
   const width = chartConfig.width - chartConfig.margin.left - chartConfig.margin.right
   const height = chartConfig.height - chartConfig.margin.top - chartConfig.margin.bottom
 
+  /**
+   * Nettoie le graphique existant
+   */
   const cleanup = () => cleanupChart(containerId)
 
+  /**
+   * Initialise le graphique avec les données
+   * @param {Array<Object>} data - Données des sessions
+   * @param {number} data[].sessionLength - Durée de la session
+   */
   const initialize = (data) => {
     cleanup()
 
