@@ -1,9 +1,9 @@
-import axios from 'axios';
-import { DataFormatter } from '../utils/dataFormatter';
-import { MOCK_DATA } from '../mock/data';
+import axios from 'axios'
+import { DataFormatter } from '../utils/dataFormatter'
+import { MOCK_DATA } from '../mock/data'
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
 
 /**
  * Fonction utilitaire générique pour les requêtes API
@@ -12,21 +12,16 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
  * @returns {Promise} Données de la réponse
  */
 const fetchData = async (endpoint, mockData) => {
-  if (USE_MOCK) return mockData;
+  if (USE_MOCK) return mockData
 
   try {
-    const response = await axios.get(`${BASE_URL}${endpoint}`);
-    return response.data;
+    const response = await axios.get(`${BASE_URL}${endpoint}`)
+    return response.data
   } catch (error) {
-    console.warn(
-      `API non disponible, utilisation des mocks pour ${endpoint}:`,
-      error
-    );
-    return mockData;
-  } finally {
-    console.log('fetchData', endpoint, mockData);
+    console.warn(`API non disponible, utilisation des mocks pour ${endpoint}:`, error)
+    return mockData
   }
-};
+}
 
 /**
  * Service pour gérer les requêtes API liées aux utilisateurs
@@ -38,11 +33,8 @@ const UserService = {
    * @returns {Promise} Données de l'utilisateur
    */
   fetchUserInfo: async (userId) => {
-    const data = await fetchData(
-      `/user/${userId}`,
-      MOCK_DATA.USER_MAIN_DATA[userId]
-    );
-    return DataFormatter.formatUserData(data.data);
+    const data = await fetchData(`/user/${userId}`, MOCK_DATA.USER_MAIN_DATA[userId])
+    return DataFormatter.formatUserData(data.data)
   },
 
   /**
@@ -51,11 +43,8 @@ const UserService = {
    * @returns {Promise} Données d'activité
    */
   fetchUserActivity: async (userId) => {
-    const data = await fetchData(
-      `/user/${userId}/activity`,
-      MOCK_DATA.USER_ACTIVITY[userId]
-    );
-    return DataFormatter.formatActivityData(data.data);
+    const data = await fetchData(`/user/${userId}/activity`, MOCK_DATA.USER_ACTIVITY[userId])
+    return DataFormatter.formatActivityData(data.data)
   },
 
   /**
@@ -67,8 +56,8 @@ const UserService = {
     const data = await fetchData(
       `/user/${userId}/average-sessions`,
       MOCK_DATA.USER_AVERAGE_SESSIONS[userId]
-    );
-    return DataFormatter.formatAverageSessionsData(data.data);
+    )
+    return DataFormatter.formatAverageSessionsData(data.data)
   },
 
   /**
@@ -77,12 +66,9 @@ const UserService = {
    * @returns {Promise} Données de performance
    */
   fetchUserPerformance: async (userId) => {
-    const data = await fetchData(
-      `/user/${userId}/performance`,
-      MOCK_DATA.USER_PERFORMANCE[userId]
-    );
-    return DataFormatter.formatPerformanceData(data.data);
-  },
-};
+    const data = await fetchData(`/user/${userId}/performance`, MOCK_DATA.USER_PERFORMANCE[userId])
+    return DataFormatter.formatPerformanceData(data.data)
+  }
+}
 
-export default UserService;
+export default UserService
