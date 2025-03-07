@@ -9,6 +9,8 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
  * Fonction utilitaire générique pour les requêtes API
  * @param {string} endpoint - Point de terminaison de l'API
  * @param {object} mockData - Données de mise en attente
+ * @param {boolean} USE_MOCK - Indique si les données sont en mise en attente
+ * @param {string} BASE_URL - URL de l'API
  * @returns {Promise} Données de la réponse
  */
 const fetchData = async (endpoint, mockData) => {

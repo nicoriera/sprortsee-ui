@@ -1,3 +1,12 @@
+/**
+ * Données de mise en attente pour les utilisateurs
+ * @typedef {Object} MockData
+ * @property {Object} USER_MAIN_DATA - Données principales des utilisateurs
+ * @property {Object} USER_ACTIVITY - Données d'activité des utilisateurs
+ * @property {Object} USER_AVERAGE_SESSIONS - Données de sessions moyennes des utilisateurs
+ * @property {Object} USER_PERFORMANCE - Données de performances des utilisateurs
+ */
+
 export const MOCK_DATA = {
   USER_MAIN_DATA: {
     12: {
@@ -6,16 +15,16 @@ export const MOCK_DATA = {
         userInfos: {
           firstName: 'Karl',
           lastName: 'Dovineau',
-          age: 31,
+          age: 31
         },
         todayScore: 0.12,
         keyData: {
           calorieCount: 1930,
           proteinCount: 155,
           carbohydrateCount: 290,
-          lipidCount: 50,
-        },
-      },
+          lipidCount: 50
+        }
+      }
     },
     18: {
       data: {
@@ -23,17 +32,17 @@ export const MOCK_DATA = {
         userInfos: {
           firstName: 'Cecilia',
           lastName: 'Ratorez',
-          age: 34,
+          age: 34
         },
         score: 0.3,
         keyData: {
           calorieCount: 2500,
           proteinCount: 90,
           carbohydrateCount: 150,
-          lipidCount: 120,
-        },
-      },
-    },
+          lipidCount: 120
+        }
+      }
+    }
   },
 
   USER_ACTIVITY: {
@@ -47,9 +56,9 @@ export const MOCK_DATA = {
           { day: '2020-07-04', kilogram: 81, calories: 290 },
           { day: '2020-07-05', kilogram: 80, calories: 160 },
           { day: '2020-07-06', kilogram: 78, calories: 162 },
-          { day: '2020-07-07', kilogram: 76, calories: 390 },
-        ],
-      },
+          { day: '2020-07-07', kilogram: 76, calories: 390 }
+        ]
+      }
     },
     18: {
       data: {
@@ -61,10 +70,10 @@ export const MOCK_DATA = {
           { day: '2020-07-04', kilogram: 70, calories: 500 },
           { day: '2020-07-05', kilogram: 69, calories: 160 },
           { day: '2020-07-06', kilogram: 69, calories: 162 },
-          { day: '2020-07-07', kilogram: 69, calories: 390 },
-        ],
-      },
-    },
+          { day: '2020-07-07', kilogram: 69, calories: 390 }
+        ]
+      }
+    }
   },
 
   USER_AVERAGE_SESSIONS: {
@@ -78,9 +87,9 @@ export const MOCK_DATA = {
           { day: 4, sessionLength: 50 },
           { day: 5, sessionLength: 0 },
           { day: 6, sessionLength: 0 },
-          { day: 7, sessionLength: 60 },
-        ],
-      },
+          { day: 7, sessionLength: 60 }
+        ]
+      }
     },
     18: {
       data: {
@@ -92,10 +101,10 @@ export const MOCK_DATA = {
           { day: 4, sessionLength: 30 },
           { day: 5, sessionLength: 30 },
           { day: 6, sessionLength: 50 },
-          { day: 7, sessionLength: 50 },
-        ],
-      },
-    },
+          { day: 7, sessionLength: 50 }
+        ]
+      }
+    }
   },
 
   USER_PERFORMANCE: {
@@ -108,7 +117,7 @@ export const MOCK_DATA = {
           3: 'endurance',
           4: 'strength',
           5: 'speed',
-          6: 'intensity',
+          6: 'intensity'
         },
         data: [
           { value: 80, kind: 1 },
@@ -116,9 +125,9 @@ export const MOCK_DATA = {
           { value: 140, kind: 3 },
           { value: 50, kind: 4 },
           { value: 200, kind: 5 },
-          { value: 90, kind: 6 },
-        ],
-      },
+          { value: 90, kind: 6 }
+        ]
+      }
     },
     18: {
       data: {
@@ -129,7 +138,7 @@ export const MOCK_DATA = {
           3: 'endurance',
           4: 'strength',
           5: 'speed',
-          6: 'intensity',
+          6: 'intensity'
         },
         data: [
           { value: 200, kind: 1 },
@@ -137,9 +146,9 @@ export const MOCK_DATA = {
           { value: 80, kind: 3 },
           { value: 80, kind: 4 },
           { value: 220, kind: 5 },
-          { value: 110, kind: 6 },
-        ],
-      },
-    },
-  },
-};
+          { value: 110, kind: 6 }
+        ]
+      }
+    }
+  }
+}

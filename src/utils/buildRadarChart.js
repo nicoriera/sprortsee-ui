@@ -1,6 +1,15 @@
 import * as d3 from 'd3'
 import { createSvg, cleanupChart, injectStyle } from './chartCore'
 
+/**
+ * Configuration de base pour le graphique radar
+ * @typedef {Object} RadarChartConfig
+ * @property {number} width - Largeur du graphique
+ * @property {number} height - Hauteur du graphique
+ * @property {Object} margin - Marges du graphique
+ * @property {Object} colors - Configuration des couleurs
+ */
+
 const BASE_CHART_CONFIG = {
   width: 258,
   height: 263,
