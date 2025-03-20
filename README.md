@@ -138,17 +138,7 @@ Note : Seuls les utilisateurs avec les ID 12 et 18 sont disponibles.
 - JSDoc pour tous les composants et fonctions
 - PropTypes pour la validation des props
 - Commentaires explicatifs dans le code
-- Guide de contribution disponible
 
-### 4. Tests
-
-- Tests unitaires avec Jest
-- Tests d'intégration
-- Tests de composants avec React Testing Library
-
-### 5. Styles
+### 4. Styles
 
 - Utilisation de Tailwind CSS
-- Styles modulaires
-- Variables CSS personnalisées
-- Thème cohérent
