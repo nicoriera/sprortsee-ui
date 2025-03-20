@@ -1,5 +1,11 @@
 import { Link } from 'react-router-dom'
 
+/**
+ * Composant NavLeft qui affiche le menu de navigation à gauche
+ * @component
+ * @returns {React.ReactElement} Composant NavLeft
+ */
+
 const NavLeft = () => {
   return (
     <div>

@@ -7,6 +7,8 @@ import { BarChart } from '../components/BarChart'
 import { LineChart } from '../components/LineChart'
 import { RadarChart } from '../components/RadarChart'
 import { RadialBarChart } from '../components/RadialBarChart'
+
+
 const Profile = () => {
   const [user, setUser] = useState(null)
   const [keyData, setKeyData] = useState(null)
